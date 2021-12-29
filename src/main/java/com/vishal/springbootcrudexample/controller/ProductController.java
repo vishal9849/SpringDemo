@@ -82,14 +82,30 @@ public class ProductController {
 //
 //    }
 
-    @GetMapping(value = {"/products/{name}","/products/{id}"})
-    public ResponseEntity<ResponseBody> findProductByName(@PathVariable String name){
-        Product prod = service.getProductByName(name);
-        if (null == prod) {
-            return new ResponseEntity<>(new ResponseBody("Not a valid id", false, Collections.emptyList()), HttpStatus.NOT_FOUND);
+    @GetMapping({"/products/{inp}"})
+    public ResponseEntity<ResponseBody> findProductByName(@PathVariable Object inp){
+        if (inp instanceof String) {
+            String o = (String) inp;
+            Product prod = service.getProductByName(o);
+            if (null == prod) {
+                return new ResponseEntity<>(new ResponseBody("Not a valid name", false, Collections.emptyList()), HttpStatus.NOT_FOUND);
+            }else{
+                return new ResponseEntity<>(new ResponseBody("Product Found",true,prod),HttpStatus.OK);
+            }
+        }else if (inp.getClass().getSimpleName().equals("Integer")){
+            int id = (int) inp;
+            Product prod = service.getProductById(id);
+            if (null == prod) {
+                return new ResponseEntity<>(new ResponseBody("Not a valid input", false, Collections.emptyList()), HttpStatus.NOT_FOUND);
+            }else{
+                return new ResponseEntity<>(new ResponseBody("Product Found",true,prod),HttpStatus.OK);
+            }
         }
-        return new ResponseEntity<>(new ResponseBody("Product Found",true,prod),HttpStatus.OK);
+        else {
+            return new ResponseEntity<>(new ResponseBody("Product Found", true, Collections.emptyList()), HttpStatus.OK);
+        }
     }
+
 
     @PutMapping("/update")
     public Product updateProduct(@PathVariable Product product) {
