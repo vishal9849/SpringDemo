@@ -13,6 +13,7 @@ import java.util.List;
 public class ResponseBody {
     private String message;
     private boolean status;
-    private List<Product> product;
+//    private List<Product> product;
+    private Object product;
 
 }

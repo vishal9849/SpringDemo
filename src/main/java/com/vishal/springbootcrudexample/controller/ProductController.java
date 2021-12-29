@@ -34,22 +34,29 @@ public class ProductController {
 
 
 
-    @PostMapping("/addProducts")
+//    @PostMapping("/addProducts")
+//    public List<Product> addProducts(@RequestBody List<Product> products) {
+//        return service.saveProducts(products);
+//    }
+
+    @PostMapping(value = {"/add","/addProducts"})
+//    @RequestMapping(value = "/addProduct", method = RequestMethod.POST)
     public List<Product> addProducts(@RequestBody List<Product> products) {
         return service.saveProducts(products);
     }
+
 
 
     /**
      * @return
      */
 
-    @GetMapping("/products")
+    @GetMapping(path = "/products")
     public ResponseEntity<ResponseBody> findAllProducts() {
         return service.getProducts();
     }
 
-    @GetMapping("/customHeader")
+    @GetMapping(name = "Customer header", path = "/customHeader")
     public ResponseEntity<String> customHeader() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Custom-Header", "foo");
@@ -64,20 +71,24 @@ public class ProductController {
     }
 
     //    We can also use @Request to provide id as a part of request url
-    @GetMapping("/product/{id}")
-    public ResponseEntity<ResponseBody> findProductById(@PathVariable int id) {
-        if( id == 0) {
-            return new ResponseEntity<>(new ResponseBody("Not a valid id",false, Collections.emptyList()),HttpStatus.OK);
+//    @GetMapping("/product/{id}")
+//    public ResponseEntity<ResponseBody> findProductById(@PathVariable int id) {
+//        Product product = service.getProductById(id);
+//
+//        if( null == product) {
+//            return new ResponseEntity<>(new ResponseBody("Not a valid id", false, Collections.emptyList()), HttpStatus.NOT_FOUND);
+//        }
+//        return new ResponseEntity<>(new ResponseBody("Product Details fetched successfully",true, product),HttpStatus.OK);
+//
+//    }
+
+    @GetMapping(value = {"/products/{name}","/products/{id}"})
+    public ResponseEntity<ResponseBody> findProductByName(@PathVariable String name){
+        Product prod = service.getProductByName(name);
+        if (null == prod) {
+            return new ResponseEntity<>(new ResponseBody("Not a valid id", false, Collections.emptyList()), HttpStatus.NOT_FOUND);
         }
-        List<Product> product = new ArrayList<>();
-        product.add(service.getProductById(id));
-        return new ResponseEntity<>(new ResponseBody("Product Details fetched successfully",true, product),HttpStatus.OK);
-
-    }
-
-    @GetMapping("/products/{name}")
-    public Product findProductByName(@PathVariable String name) {
-        return service.getProductByName(name);
+        return new ResponseEntity<>(new ResponseBody("Product Found",true,prod),HttpStatus.OK);
     }
 
     @PutMapping("/update")
