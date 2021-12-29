@@ -20,6 +20,7 @@ import java.util.List;
 // This controller will talk to the service class
 //for that we need to inject service in controller class using Autowired
 @RestController
+@CrossOrigin(origins="http://localhost:3000")
 public class ProductController {
 
     @Autowired
@@ -64,7 +65,7 @@ public class ProductController {
     }
 
     //    We can also use @Request to provide id as a part of request url
-    @GetMapping("/product/{id}")
+    @GetMapping("/products/{id}")
     public ResponseEntity<ResponseBody> findProductById(@PathVariable int id) {
         if( id == 0) {
             return new ResponseEntity<>(new ResponseBody("Not a valid id",false, Collections.emptyList()),HttpStatus.OK);
@@ -75,10 +76,10 @@ public class ProductController {
 
     }
 
-    @GetMapping("/products/{name}")
-    public Product findProductByName(@PathVariable String name) {
-        return service.getProductByName(name);
-    }
+//    @GetMapping("/products/{name}")
+//    public Product findProductByName(@PathVariable String name) {
+//        return service.getProductByName(name);
+//    }
 
     @PutMapping("/update")
     public Product updateProduct(@PathVariable Product product) {
