@@ -10,11 +10,11 @@ public interface ProductService {
 
     Product saveProduct(Product product);
 
-    List<Product> saveProducts(List<Product> products);
+    List<Product> saveProducts(List<Product> products) throws Exception;
 
     ResponseEntity<ResponseBody> getProducts();
 
-    Product getProductById(int id);
+    Product getProductById(int id) throws Exception;
 
     /**
      * @param name : name of the product

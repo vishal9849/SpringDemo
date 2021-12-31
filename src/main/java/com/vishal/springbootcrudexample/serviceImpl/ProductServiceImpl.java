@@ -13,6 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.http.HttpResponse;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -24,16 +25,24 @@ public class ProductServiceImpl implements ProductService {
         return repository.save(product);
     }
 
-    public List<Product> saveProducts(List<Product> products) {
-        return repository.saveAll(products);
+    public List<Product> saveProducts(List<Product> products) throws Exception{
+        if(products.isEmpty() || products.size() == 0) {
+            throw new Exception("Please enter a list of products");
+        }
+            return repository.saveAll(products);
     }
 
     public ResponseEntity<ResponseBody> getProducts() {
         return new ResponseEntity<>(new ResponseBody("Product Details fetched successfully",true, repository.findAll()),HttpStatus.OK);
     }
 
-    public Product getProductById(int id) {
-        return repository.findById(id).orElse(null);
+    public Product getProductById(int id) throws Exception {
+        Optional<Product> prod = repository.findById(id);
+        if(prod.isPresent()){
+            return prod.get();
+        }
+        throw new Exception("Details not found");
+
     }
 
     /**
